@@ -39,16 +39,34 @@ const locations = [
     "button function": [buyHealth, buyWeapon, goTown],
     text: ["You are in the store."],
   },
-   {
+  {
     name: "cave",
-    "button text": [
-      "figh slime",
-      "figh beast",
-      "Go to town square",
-    ],
-    "button function": [buyHealth, buyWeapon, goTown],
-    text: ["You enter the cave."],
-  }
+    "button text": ["Fight slime", "Fight beast", "Go to town square"],
+    "button function": [fightSlime, fightBeast, goTown],
+    text: ["You enter the cave and see some monsters"],
+  },
+];
+
+// Weapons 
+
+const weapon = [
+  {
+  name: "stick", 
+  power: 5
+}, 
+{
+  name: "dagger", 
+  power: 30
+},
+{
+  name: "clawhammer", 
+  power: 50
+},
+
+{
+  name: "sword",
+  power: 100
+}
 ];
 
 // Button initialisieren onClick
@@ -57,6 +75,7 @@ button2.addEventListener("click", goCave);
 button3.addEventListener("click", fightDragon);
 
 function update(location) {
+  //Town Square Buttons
   button1.innerText = location["button text"][0];
   button2.innerText = location["button text"][1];
   button3.innerText = location["button text"][2];
@@ -65,14 +84,23 @@ function update(location) {
   button3.addEventListener("click", location["button function"][2]);
   text.innerText = location.text;
 
+  // store
   button1.innerText = location["button text"][0];
   button2.innerText = location["button text"][1];
   button3.innerText = location["button text"][2];
-
   button1.addEventListener("click", location["button function"][0]);
   button2.addEventListener("click", location["button function"][1]);
   button3.addEventListener("click", location["button function"][2]);
-  text.innerText = "You enter the store";
+  text.innerText = location.text;
+
+  // cave
+  button1.innerText = location["button text"][0];
+  button2.innerText = location["button text"][1];
+  button3.innerText = location["button text"][2];
+  button1.addEventListener("click", location["button function"][0]);
+  button2.addEventListener("click", location["button function"][1]);
+  button3.addEventListener("click", location["button function"][2]);
+  text.innerText = location.text;
 }
 
 function goTown() {
@@ -92,5 +120,20 @@ function fightDragon() {
   console.log("Going to fight the Dragon.");
 }
 
-function buyHealth() {}
-function buyWeapon() {}
+function buyHealth() {
+  if (gold >= 10) {
+    gold -= 10;
+    health += 10;
+    goldText.innerText = gold;
+    healthText.innerText = health;
+  } else {
+    text.innerText = "You don't have enough gold to buy health";
+  }
+}
+function buyWeapon() {
+  if(gold >= 30){
+    
+  }
+}
+function fightSlime() {}
+function fightBeast() {}
