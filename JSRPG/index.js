@@ -3,7 +3,7 @@ let health = 100;
 let gold = 50;
 let currentWeapon = 0;
 let fighting;
-let monsterhealth;
+let monsterHealth;
 let inventory = ["stick"];
 
 // alle Elemente aus dem html als const deklarieren damit wir sie updaten können
@@ -45,29 +45,57 @@ const locations = [
     "button function": [fightSlime, fightBeast, goTown],
     text: ["You enter the cave and see some monsters"],
   },
-];
-
-// Weapons 
-
-const weapon = [
   {
-  name: "stick", 
-  power: 5
-}, 
-{
-  name: "dagger", 
-  power: 30
-},
-{
-  name: "clawhammer", 
-  power: 50
-},
+    name: "fight",
+    "button text": ["Attack", "Dodge", "Run"],
+    "button function": [attack, dodge, goTown],
+    text: ["You are fighting a monster"],
+  },
 
-{
-  name: "sword",
-  power: 100
-}
+
 ];
+
+// Weapons
+
+const weapons = [
+  {
+    name: "stick",
+    power: 5,
+  },
+  {
+    name: "dagger",
+    power: 30,
+  },
+  {
+    name: "clawhammer",
+    power: 50,
+  },
+
+  {
+    name: "sword",
+    power: 100,
+  },
+];
+
+// Monsters als array anlegen
+
+const monsters = [
+  {name: "slime",
+    level: 2,
+    health: 15
+  }, 
+  
+  {name: "fanged beast",
+    level: 8,
+    health: 60
+  }, 
+
+  {name: "dragon",
+    level: 20,
+    health: 30
+  }
+
+]
 
 // Button initialisieren onClick
 button1.addEventListener("click", goStore);
@@ -116,9 +144,6 @@ function goCave() {
   update(locations[2]);
 }
 
-function fightDragon() {
-  console.log("Going to fight the Dragon.");
-}
 
 function buyHealth() {
   if (gold >= 10) {
@@ -131,9 +156,65 @@ function buyHealth() {
   }
 }
 function buyWeapon() {
-  if(gold >= 30){
-    
+  if (currentWeapon < weapons.length - 1) {
+    if (gold >= 30) {
+      gold -= 30;
+      currentWeapon++;
+      goldText.innerText = gold;
+      let newWeapon = weapons[currentWeapon].name; // erstellen neue variable newWeapon und weisen dieser aus dem weapons array den namen der currentWeapon zu
+      text.innerText = "You now have a " + newWeapon + ".";
+      inventory.push(newWeapon);
+      text.innerText += "In your Inventory you have: " + inventory + ".";
+    } else {
+      text.innerText = "You dont have enough gold to buy a weapon";
+    }
+  } else {
+    text.innerText = "You already have the most powerful weapon!";
+    button2.innerText = "Sell weapon for 15 gold";
+    button2.addEventListener("click", sellWeapon);
   }
 }
-function fightSlime() {}
-function fightBeast() {}
+
+function sellWeapon() {
+  if (inventory.length > 1) {
+    gold += 15;
+    goldText.innerText = gold;
+    let currentWeapon = inventory.shift(); // shift removes first element of array and returns it into the currentWeapon variable
+    text.innerText = "You sold a " + currentWeapon + ".";
+    text.innerText += "You have " + inventory + "in your inventory";
+  } else {
+    text.innerText = "Don't sell your only weapon!";
+  }
+}
+
+function fightSlime() {
+  fighting = 0; 
+  goFight();
+}
+function fightBeast() {
+  fighting = 1; 
+  goFight();
+}
+
+function fightDragon() {
+  fighting = 2; 
+  goFight();
+}
+
+function goFight() {
+  update(locations[3]);
+  monsterHealth = monsters[fighting].health; // wir setzen vorher fighting auf einen bestimmten index 0,1,2 und dieser index wählt dann aus unserem array monsters ein monster aus
+  monsterStats.style.display = "block"; // updaten css stylen mit js 
+  monsterNameText.innerText = monsters[fighting].name; 
+  monsterHealthText.innerText = monsterHealth; 
+}
+
+function attack(){
+  text.innerText = "The " + monsters[fighting].name + "attacks."; 
+  text.innerText += " You attack it with your " + weapons[currentWeapon].name + "."; 
+  health -= monsters[fighting].level; 
+  monsterHealth -= weapons[currentWeapon].power; 
+  monsterHealth -= weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1; 
+}
+
+function dodge() {}
