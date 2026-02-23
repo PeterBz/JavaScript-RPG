@@ -337,4 +337,4 @@ function pick(guess) {
       lose();
     }
   }
-}
+} 
