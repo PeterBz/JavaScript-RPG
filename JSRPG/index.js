@@ -58,7 +58,7 @@ const locations = [
       "Go to town square",
       "Go to town square",
     ],
-    "button function": [goTown, goTown, goTown],
+    "button function": [goTown, goTown, easterEgg],
     text: ["You have slain the monster. You gain experience and gold."],
   },
   {
@@ -73,6 +73,14 @@ const locations = [
     "button function": [restart, restart, restart],
     text: ["You have defeated the Dragon. YOU WIN THE GAME"],
   },
+  {
+    name: "easterEgg",
+    "button text": ["2", " 8", "Go to town square? "],
+    "button function": [pickTwo, pickEight, goTown],
+    text: [
+      "You find a secret game. Pick a number above. Ten numbers will be randomly chosen between 0 and 10. If the number you choose matches on of the random numbers, you win!",
+    ],
+  }
 ];
 
 // Weapons
@@ -241,10 +249,9 @@ function attack() {
     fighting === 2 ? winGame() : defeatMonster();
   }
 
-  if(Math.random() <= .1 && inventory.length !== 1) {
-    text.innerText += "Your " + inventory.pop() +  " breaks.";
-    currentWeapon--; 
-
+  if (Math.random() <= 0.1 && inventory.length !== 1) {
+    text.innerText += "Your " + inventory.pop() + " breaks.";
+    currentWeapon--;
   }
 }
 
@@ -287,10 +294,47 @@ function winGame() {
 
 function getMonsterAttackValue(level) {
   let hit = level * 5 - Math.floor(Math.random() * xp);
-  console.log(hit)
+  console.log(hit);
   return hit;
 }
 
 function isMonsterHit() {
-  return Math.random() > 0.2 || health < 20; 
+  return Math.random() > 0.2 || health < 20;
+}
+
+function easterEgg() {
+  update(locations[7]);
+}
+
+function pickTwo (){
+pick(2);
+}
+function pickEight (){
+pick(8);
+}
+
+function pick(guess) {
+  let numbers = [];
+  while (numbers.length < 10){
+    numbers.push(Math.floor(Math.random() * 11));
+  } 
+
+  text.innerText ="You picked " + guess + ". Here are the random numbers :\n"; 
+
+  for (let i = 0; i < 10; i++) {
+     text.innerText += numbers[i] + "\n";
+  }
+
+  if(numbers.indexOf(guess) !== -1){
+    text.innerText += "Right! You win 20 gold";
+    gold += 20; 
+    goldText.innerText = gold;
+  } else {
+    text.innerText += "WRONG! You lose 20 health";
+    health -= 20; 
+    healthText.innerText = health; 
+    if(health <= 0) { 
+      lose();
+    }
+  }
 }
